@@ -13,7 +13,9 @@ export default {
   },
   methods: {
     onClick() {
-      console.log('click');
+      // not reusable
+      // this.$emit('toggle-add-task')
+      this.$emit('btn-click');
     },
   },
 };
