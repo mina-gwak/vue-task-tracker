@@ -1,5 +1,5 @@
 <template>
-  <form @submit="onSubmit" class="add-form">
+  <form @submit.prevent="onSubmit" class="add-form">
     <div class="form-control">
       <label>Task</label>
       <input type="text" v-model="text" name="text" placeholder="Add Task" />
@@ -28,15 +28,12 @@ export default {
   },
   methods: {
     onSubmit(e) {
-      e.preventDefault();
-
       if (!this.text) {
         alert('Please add a task');
         return;
       }
 
       const newTask = {
-        id: Math.floor(Math.random() * 100000),
         text: this.text,
         day: this.day,
         reminder: this.reminder,
@@ -68,7 +65,6 @@ export default {
 .form-control input {
   width: 100%;
   height: 40px;
-  margin: 5px;
   padding: 3px 7px;
   font-size: 17px;
 }
