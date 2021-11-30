@@ -27,7 +27,7 @@ export default {
     };
   },
   methods: {
-    onSubmit(e) {
+    onSubmit() {
       if (!this.text) {
         alert('Please add a task');
         return;
@@ -67,6 +67,10 @@ export default {
   height: 40px;
   padding: 3px 7px;
   font-size: 17px;
+}
+
+.form-control input:focus {
+  outline: none;
 }
 
 .form-control-check {
