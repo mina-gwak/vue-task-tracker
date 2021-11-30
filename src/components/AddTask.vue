@@ -2,23 +2,31 @@
   <form @submit.prevent="onSubmit" class="add-form">
     <div class="form-control">
       <label>Task</label>
-      <input type="text" v-model="text" name="text" placeholder="Add Task" />
+      <input type="text" v-model="text" name="text" placeholder="Add Task"/>
     </div>
     <div class="form-control">
       <label>Day & Time</label>
-      <input type="text" v-model="day" name="day" placeholder="Add Day & Time" />
+      <input type="text" v-model="day" name="day" placeholder="Add Day & Time"/>
     </div>
     <div class="form-control form-control-check">
       <label>Set Reminder</label>
-      <input type="checkbox" v-model="reminder" name="reminder" />
+      <input type="checkbox" v-model="reminder" name="reminder"/>
     </div>
-    <input type="submit" value="Save Task" class="btn btn-block" />
+    <input type="submit" value="Save Task" class="btn btn-block"/>
   </form>
 </template>
 
 <script>
+import TaskApi from "../assets/js/api";
+
 export default {
   name: 'AddTask',
+  props: {
+    selectedTask: Object,
+    resetSelectedTask: Function,
+    showAddTask: Boolean,
+    updateTask: Function
+  },
   data() {
     return {
       text: '',
@@ -27,7 +35,7 @@ export default {
     };
   },
   methods: {
-    onSubmit() {
+    async onSubmit() {
       if (!this.text) {
         alert('Please add a task');
         return;
@@ -39,13 +47,41 @@ export default {
         reminder: this.reminder,
       };
 
-      this.$emit('add-task', newTask);
+      const tasks = await TaskApi.getAllTask();
 
+      for (let task of tasks) {
+        if (task.id === this.selectedTask.id) {
+          this.updateTask({
+            ...newTask, id: task.id
+          });
+          this.resetData();
+          return;
+        }
+      }
+
+      this.$emit('add-task', newTask);
+      this.resetData();
+    },
+    resetData() {
       this.text = '';
       this.day = '';
       this.reminder = false;
-    },
+      this.resetSelectedTask();
+    }
   },
+  watch: {
+    selectedTask(task) {
+      if (this.selectedTask.length !== 0) {
+
+      }
+      this.text = task.text;
+      this.day = task.day;
+      this.reminder = task.reminder;
+    },
+    showAddTask() {
+      !this.showAddTask && this.resetSelectedTask();
+    }
+  }
 };
 </script>
 

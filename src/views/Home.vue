@@ -2,9 +2,14 @@
   <AddTask
       v-show="showAddTask"
       @add-task="addTask"
+      :showAddTask="showAddTask"
+      :selectedTask="selectedTask"
+      :resetSelectedTask="resetSelectedTask"
+      :updateTask="updateTask"
   />
   <Tasks
       @toggle-reminder="toggleReminder"
+      @show-selected-task="showSelectedTask"
       @delete-task="deleteTask"
       :tasks="tasks"
   />
@@ -20,6 +25,7 @@ export default {
   name: 'Home',
   props: {
     showAddTask: Boolean,
+    toggleAddTask: Function
   },
   components: {
     AddTask,
@@ -28,6 +34,7 @@ export default {
   data() {
     return {
       tasks: [],
+      selectedTask: {}
     };
   },
   methods: {
@@ -44,11 +51,22 @@ export default {
         res.status === 200 ? await this.render() : null
       }
     },
+    async updateTask(task) {
+      await TaskApi.updateTask(task);
+      await this.render();
+    },
     async toggleReminder(task) {
       const updTask = { ...task, reminder: !task.reminder };
       await TaskApi.updateTask(updTask);
       await this.render();
-    }
+    },
+    showSelectedTask(task) {
+      if (!this.showAddTask) this.toggleAddTask();
+      this.selectedTask = task;
+    },
+    resetSelectedTask() {
+      this.selectedTask = {};
+    },
   },
   async created() {
     this.tasks = await TaskApi.getAllTask();

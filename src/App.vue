@@ -5,8 +5,8 @@
         title="Task Tracker"
         :showAddTask="showAddTask"
     />
-    <router-view :showAddTask="showAddTask" />
-    <Footer />
+    <router-view :showAddTask="showAddTask" :toggleAddTask="toggleAddTask"/>
+    <Footer/>
   </div>
 </template>
 
